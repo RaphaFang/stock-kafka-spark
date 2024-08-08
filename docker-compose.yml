@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - kafka
+      - zookeeper
+      # - spark-master
+      # - spark-worker
+# 如果未來有多台機器，這些設置才有意義
+# spark-master:
+#   image: bitnami/spark:latest
+#   environment:
+#     - SPARK_MODE=master
+#   ports:
+#     - "7077:7077"
+#     - "8080:8080"
+
+# spark-worker:
+#   image: bitnami/spark:latest
+#   environment:
+#     - SPARK_MODE=worker
+#     - SPARK_MASTER_URL=spark://spark-master:7077
+#   depends_on:
+#     - spark-master
+#   ports:
+#     - "8081:8081"
+
