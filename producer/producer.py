@@ -39,6 +39,4 @@ def add_to_batch(data):
     global message_batch
     with batch_lock: 
         message_batch.append(data)
-    # send_batch_to_kafka('2330_topic')
 
-# send_batch_to_kafka('2330_topic')

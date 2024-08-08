@@ -2,8 +2,6 @@ from fugle_marketdata import WebSocketClient, RestClient
 import json
 import asyncio
 import os
-
-
 FUGLE_API_KEY = os.getenv("FUGLE_API_KEY")
 
 class WebSocketHandler:
@@ -12,11 +10,7 @@ class WebSocketHandler:
         self.handle_data_callback = handle_data_callback
 
     def handle_message(self, message):
-        # print(f'message: {message}')
-        # self.handle_data_callback(message)
         data = json.loads(message)
-        # print(data)
-        # print(type(data))
         if data.get("event")=="data":
             self.handle_data_callback(data.get("data"))
              
